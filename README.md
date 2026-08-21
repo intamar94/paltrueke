@@ -90,3 +90,4 @@ src/
 - El campo `verificado` existe y está protegido para que nadie se autoverifique (solo se puede cambiar con la *service role key*, es decir, desde un futuro panel admin).
 - `mark_helping` / `mark_resolved` / `reopen_post` son funciones separadas de la base de datos, listas para conectarse a tiempo real y notificaciones más adelante.
 - Por ahora el municipio se escribe libremente (ne hay una lista cerrada de los ~1100 municipios de Colombia) para no complicar el formulario; se puede sumar un listado oficial (DIVIPOLA) más adelante sin tocar el resto de la app.
+
