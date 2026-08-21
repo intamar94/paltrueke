@@ -92,8 +92,8 @@ export default function App() {
         categoria: draft.categoria,
         titulo: catInfo(draft.categoria).label,
         descripcion: draft.descripcion.trim() || null,
-        pais: draft.pais.trim() || "Colombia",
-        departamento: draft.departamento.trim() || draft.pais.trim() || "Colombia",
+        pais: "Colombia",
+        departamento: draft.departamento.trim() || "Colombia",
         municipio: draft.municipio.trim(),
         sector: draft.sector.trim() || null,
         urgente: draft.urgente,
@@ -119,8 +119,8 @@ export default function App() {
           categoria: draft.categoria,
           titulo: catInfo(draft.categoria).label,
           descripcion: draft.descripcion.trim() || null,
-          pais: draft.pais.trim() || "Colombia",
-          departamento: draft.departamento.trim() || draft.pais.trim() || "Colombia",
+          pais: "Colombia",
+          departamento: draft.departamento.trim() || "Colombia",
           municipio: draft.municipio.trim(),
           sector: draft.sector.trim() || null,
           urgente: draft.urgente,
@@ -217,10 +217,7 @@ export default function App() {
         <div style={{ maxWidth: 720, margin: "12px auto 0", padding: "0 16px" }}>
           <button
             onClick={() => { setFilters({ ...EMPTY_FILTERS, mine: true }); setFeedTitle("¿Ya se resolvieron?"); setView("feed"); }}
-            style={{
-              width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 10,
-              background: "#FFF6E8", border: "1px solid #E8590C", borderRadius: 10, padding: "10px 12px",
-            }}
+            style={{ width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 10, background: "#FFF6E8", border: "1px solid #E8590C", borderRadius: 10, padding: "10px 12px" }}
           >
             <AlertTriangle size={18} color="var(--naranja)" style={{ flexShrink: 0 }} />
             <span style={{ fontSize: 13, color: "var(--ink)" }}>
@@ -230,13 +227,7 @@ export default function App() {
         </div>
       )}
 
-      {view === "home" && (
-        <HomeView
-          counts={counts}
-          onTipo={(t) => requirePhone(() => setFormTipo(t))}
-          onVerTodo={() => goFeed("todo", "Todas las publicaciones")}
-        />
-      )}
+      {view === "home" && <HomeView counts={counts} onTipo={(t) => requirePhone(() => setFormTipo(t))} onVerTodo={() => goFeed("todo", "Todas las publicaciones")} />}
 
       {view === "feed" && (
         <FeedView
@@ -258,15 +249,7 @@ export default function App() {
         />
       )}
 
-      <button
-        onClick={() => requirePhone(() => setFormTipo("necesito"))}
-        aria-label="Publicar"
-        style={{
-          position: "fixed", bottom: 20, right: 20, width: 60, height: 60, borderRadius: 30,
-          background: "var(--naranja)", border: "none", color: "#fff",
-          boxShadow: "0 4px 14px rgba(232,89,12,0.4)", display: "flex", alignItems: "center", justifyContent: "center",
-        }}
-      >
+      <button onClick={() => requirePhone(() => setFormTipo("necesito"))} aria-label="Publicar" style={{ position: "fixed", bottom: 20, right: 20, width: 60, height: 60, borderRadius: 30, background: "var(--naranja)", border: "none", color: "#fff", boxShadow: "0 4px 14px rgba(232,89,12,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Plus size={28} />
       </button>
 
@@ -284,21 +267,8 @@ export default function App() {
 
       {confirming && (
         <ConfirmDialog
-          title={
-            confirming.action === "resolve" ? "¿Marcar como resuelto?" :
-            confirming.action === "helping" ? "¿Vas a ayudar con esto?" :
-            confirming.action === "delete" ? "¿Eliminar esta publicación?" :
-            "¿Liberar este pedido?"
-          }
-          description={
-            confirming.action === "resolve"
-              ? "Se va a quitar de la lista principal. Esta acción no se puede deshacer."
-              : confirming.action === "helping"
-              ? "Los demás van a ver que ya alguien está en camino. Cuando la ayuda llegue, marca \"Resuelto\" (tú o quien publicó, cualquiera de los dos puede hacerlo)."
-              : confirming.action === "delete"
-              ? "Se borra por completo, no se puede recuperar. Si solo pusiste un dato mal, mejor usa \"Editar\" en vez de esto."
-              : "Va a volver a estar disponible para que otra persona ayude. Úsalo si te equivocaste, ya no puedes ayudar, o la otra parte no te contactó."
-          }
+          title={confirming.action === "resolve" ? "¿Marcar como resuelto?" : confirming.action === "helping" ? "¿Vas a ayudar con esto?" : confirming.action === "delete" ? "¿Eliminar esta publicación?" : "¿Liberar este pedido?"}
+          description={confirming.action === "resolve" ? "Se va a quitar de la lista principal. Esta acción no se puede deshacer." : confirming.action === "helping" ? "Los demás van a ver que ya alguien está en camino. Cuando la ayuda llegue, marca \"Resuelto\" (tú o quien publicó, cualquiera de los dos puede hacerlo)." : confirming.action === "delete" ? "Se borra por completo, no se puede recuperar. Si solo pusiste un dato mal, mejor usa \"Editar\" en vez de esto." : "Va a volver a estar disponible para que otra persona ayude. Úsalo si te equivocaste, ya no puedes ayudar, o la otra parte no te contactó."}
           onCancel={() => setConfirming(null)}
           onConfirm={() => {
             if (confirming.action === "resolve") resolve(confirming.post);
@@ -310,7 +280,6 @@ export default function App() {
       )}
 
       {reporting && <ReportDialog onCancel={() => setReporting(null)} onSubmit={submitReport} />}
-
       <Toast message={toast} />
     </div>
   );
