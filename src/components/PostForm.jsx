@@ -11,8 +11,6 @@ const EMPTY = {
   departamento: "",
   municipio: "",
   sector: "",
-  remoto: false,
-  origen: "",
   contacto: "",
   confirmo: false,
 };
@@ -34,8 +32,6 @@ export default function PostForm({ initialTipo, defaultContacto, editingPost, on
           departamento: editingPost.departamento || "",
           municipio: editingPost.municipio || "",
           sector: editingPost.sector || "",
-          remoto: editingPost.remoto || false,
-          origen: editingPost.origen || "",
           contacto: editingPost.contacto,
           confirmo: true,
         }
@@ -126,31 +122,9 @@ export default function PostForm({ initialTipo, defaultContacto, editingPost, on
           )}
 
           {draft.tipo === "ofrezco" && (
-            <>
-              <label style={{ display: "flex", alignItems: "center", gap: 8, margin: "14px 0 4px", fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>
-                <input
-                  type="checkbox"
-                  checked={draft.remoto}
-                  onChange={(e) => set({ remoto: e.target.checked, origen: e.target.checked ? draft.origen : "" })}
-                  style={{ width: 18, height: 18, accentColor: "var(--verde)" }}
-                />
-                🌍 Ofrezco esto desde otra ciudad o país
-              </label>
-              {draft.remoto && (
-                <input
-                  value={draft.origen}
-                  onChange={(e) => set({ origen: e.target.value })}
-                  placeholder="¿Desde dónde ofreces esto? Ej: Bogotá"
-                  style={{ ...inp, marginTop: 8 }}
-                  maxLength={60}
-                />
-              )}
-              <p style={{ fontSize: 12, color: "var(--muted)", margin: "6px 0 0", fontStyle: "italic" }}>
-                {draft.remoto
-                  ? "En Ubicación pon la zona a la que puedes enviar la ayuda — así aparece en los filtros de esa comunidad."
-                  : "Pon la ubicación desde donde ofreces esto — así te pueden contactar y coordinar cómo retirarlo o recibirlo."}
-              </p>
-            </>
+            <p style={{ fontSize: 12, color: "var(--muted)", margin: "6px 0 0", fontStyle: "italic" }}>
+              Pon la ubicación desde donde ofreces esto — así te pueden contactar y coordinar cómo retirarlo o recibirlo.
+            </p>
           )}
 
           <label style={{ ...lbl, marginTop: 16 }}>Ubicación</label>
