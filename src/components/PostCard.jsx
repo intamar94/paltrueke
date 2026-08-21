@@ -26,6 +26,13 @@ export default function PostCard({ post, mine, isHelper, onMarkHelping, onResolv
   const resuelta = post.estado === "resuelta";
   const canClose = mine || isHelper;
   const esCartel = post.tipo === "informo";
+  const tieneHelper = Boolean(post.helper_id) && post.estado === "en_proceso";
+  const confirmadoOwner = Boolean(post.confirmado_owner);
+  const confirmadoHelper = Boolean(post.confirmado_helper);
+  const confirmacionPendiente = tieneHelper && confirmadoOwner !== confirmadoHelper;
+  const mensajeConfirmacion = mine
+    ? (confirmadoOwner ? "Confirmaste, falta tu vecino" : "Tu vecino ya confirmó, falta que confirmes tú")
+    : (confirmadoHelper ? "Confirmaste, falta tu vecino" : "Tu vecino ya confirmó, falta que confirmes tú");
 
   return (
     <div style={{ background: resuelta ? "#fff" : TIPO_TINT[post.tipo], borderRadius: 12, padding: 0, overflow: "hidden", border: !resuelta && post.urgente ? "1.5px dashed var(--rojo)" : `1px solid ${TIPO_BORDER[post.tipo]}`, borderLeft: `5px solid ${TIPO_BG[post.tipo]}`, boxShadow: "0 1px 2px rgba(0,0,0,0.03)", opacity: resuelta ? 0.65 : 1 }}>
@@ -38,6 +45,7 @@ export default function PostCard({ post, mine, isHelper, onMarkHelping, onResolv
             {post.verificado && <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "var(--verde)" }}><BadgeCheck size={13} /> VERIFICADO</span>}
             {!resuelta && post.urgente && <span style={{ display: "flex", alignItems: "center", gap: 3, color: "var(--rojo)", fontSize: 11, fontWeight: 700 }}><AlertTriangle size={12} /> URGENTE</span>}
             {post.estado === "en_proceso" && !resuelta && <span style={{ fontSize: 10.5, fontWeight: 700, color: "var(--naranja)" }}>ALGUIEN ESTÁ AYUDANDO</span>}
+            {confirmacionPendiente && <span style={{ fontSize: 10.5, fontWeight: 700, color: "var(--verde)", background: "#F0F6F1", border: "1px solid #C7DECB", borderRadius: 7, padding: "4px 7px" }}>{mensajeConfirmacion}</span>}
           </div>
           <span style={{ fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}><Clock size={11} /> {timeAgo(post.created_at)}</span>
         </div>
@@ -53,7 +61,7 @@ export default function PostCard({ post, mine, isHelper, onMarkHelping, onResolv
             {!resuelta && post.tipo === "necesito" && post.estado === "activa" && !mine && <button onClick={onMarkHelping} style={btnOrange}><HandHeart size={15} /> Ayudar</button>}
             {!resuelta && mine && post.estado === "en_proceso" && <button onClick={onRelease} style={btnRedOutline} title="Si no te contactó o no llegó la ayuda">No llegó, liberar</button>}
             {!resuelta && isHelper && !mine && post.estado === "en_proceso" && <button onClick={onRelease} style={btnRedOutline} title="Si te equivocaste o ya no puedes ayudar">No puedo ayudar</button>}
-            {!resuelta && canClose && !esCartel && <button onClick={onResolve} style={btnGreenOutline}><CheckCircle2 size={15} /> Marcar resuelto</button>}
+            {!resuelta && canClose && !esCartel && <button onClick={onResolve} style={btnGreenOutline}><CheckCircle2 size={15} /> {post.helper_id ? "Confirmar resuelto" : "Marcar resuelto"}</button>}
             {!resuelta && mine && esCartel && <button onClick={onResolve} style={btnGrayOutline} title="Si esta información ya no aplica"><XCircle size={13} /> Retirar información</button>}
             {mine && <button onClick={onEdit} style={btnGrayOutline} title="Editar"><Pencil size={13} /> Editar</button>}
             {mine && <button onClick={onDelete} style={btnRedOutline} title="Eliminar"><Trash2 size={13} /> Eliminar</button>}
