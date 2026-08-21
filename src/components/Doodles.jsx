@@ -53,3 +53,14 @@ export function EmptyDoodle() {
     </svg>
   );
 }
+
+export function SearchDoodle() {
+  return (
+    <svg viewBox="0 0 96 76" width="88" height="70" style={{ display: "block", margin: "0 auto" }} aria-hidden="true">
+      <circle cx="42" cy="34" r="22" fill="#FDF3E9" stroke="#C4573C" strokeWidth="4" />
+      <path d="M58 50 L76 68" fill="none" stroke="#D9A441" strokeWidth="7" strokeLinecap="round" />
+      <path d="M42 25c-3.5-5.5-11-5.5-11 1 0 5.5 11 12 11 12s11-6.5 11-12c0-6.5-7.5-6.5-11-1z" fill="#4C7A52" />
+      <circle cx="42" cy="34" r="25" fill="none" stroke="#C9A385" strokeWidth="1.5" opacity="0.7" />
+    </svg>
+  );
+}
