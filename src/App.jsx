@@ -17,24 +17,21 @@ const EMPTY_FILTERS = { tipo: "todo", urgente: false, categoria: null, mine: fal
 export default function App() {
   const [userId, setUserId] = useState(null);
   const [authError, setAuthError] = useState("");
-  const [telefono, setTelefono] = useState(undefined); // undefined = cargando, null = falta pedirlo
+  const [telefono, setTelefono] = useState(undefined);
   const [phoneGateOpen, setPhoneGateOpen] = useState(false);
   const pendingActionRef = useRef(null);
-  const [view, setView] = useState("home"); // home | feed
+  const [view, setView] = useState("home");
   const [feedTitle, setFeedTitle] = useState("Inicio");
-  const [formTipo, setFormTipo] = useState(null); // abre el form si no es null
+  const [formTipo, setFormTipo] = useState(null);
   const [filters, setFilters] = useState(EMPTY_FILTERS);
-  const [confirming, setConfirming] = useState(null); // { post, action }
-  const [reporting, setReporting] = useState(null); // post
-  const [editingPost, setEditingPost] = useState(null); // post que se está editando, o null
+  const [confirming, setConfirming] = useState(null);
+  const [reporting, setReporting] = useState(null);
+  const [editingPost, setEditingPost] = useState(null);
   const [actionError, setActionError] = useState("");
   const [toast, setToast] = useState(null);
 
   const { posts, loading, error, reload } = usePosts();
 
-  // Al abrir la app: crea/recupera la sesión anónima y busca si esta persona
-  // ya tiene un teléfono guardado. Ya no bloquea la pantalla mientras tanto:
-  // Inicio y el feed se ven de inmediato, sin pedir nada primero.
   useEffect(() => {
     ensureSession()
       .then(async (user) => {
@@ -45,15 +42,12 @@ export default function App() {
       .catch(() => setAuthError("No se pudo conectar. Revisa tu conexión e intenta de nuevo."));
   }, []);
 
-  // El aviso de "gracias" se borra solo, para no obligar a nadie a cerrarlo
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3200);
     return () => clearTimeout(t);
   }, [toast]);
 
-  // Solo pedimos el teléfono en el momento en que hace falta de verdad
-  // (publicar o comprometerse a ayudar) — nunca antes de dejar ver el feed.
   const requirePhone = (action) => {
     if (telefono) { action(); return; }
     if (!userId) { setActionError("Danos un segundo, estamos preparando tu sesión, e intenta de nuevo."); return; }
@@ -69,22 +63,18 @@ export default function App() {
     if (action) action();
   };
 
-  // Navega al feed con un filtro de tipo ya aplicado
   const goFeed = (tipoFiltro, title) => {
     setFilters({ ...EMPTY_FILTERS, tipo: tipoFiltro || "todo" });
     setFeedTitle(title || "Inicio");
     setView("feed");
   };
 
-  // Contadores para las tarjetas del Inicio
   const counts = {
     necesito: (posts || []).filter((p) => p.tipo === "necesito" && p.estado !== "resuelta").length,
     ofrezco: (posts || []).filter((p) => p.tipo === "ofrezco" && p.estado !== "resuelta").length,
     informo: (posts || []).filter((p) => p.tipo === "informo").length,
   };
 
-  // Publicaciones "en proceso" hace más de 2 días: se le avisa a la
-  // persona (dueño o ayudante) para que confirme si ya se resolvió
   const DOS_DIAS_MS = 1000 * 60 * 60 * 48;
   const olvidadas = (posts || []).filter(
     (p) =>
@@ -94,11 +84,6 @@ export default function App() {
       Date.now() - new Date(p.updated_at).getTime() > DOS_DIAS_MS
   );
 
-  // Crea una publicación nueva. La base de datos todavía pide un "título"
-  // (no se le pregunta a la persona, para no repetir la categoría), así
-  // que se genera solo a partir de la categoría elegida. Si la base de
-  // datos rechaza el pedido (por ejemplo, por el límite de publicaciones),
-  // el error sube tal cual hasta PostForm para mostrárselo a la persona.
   const createPost = useCallback(
     async (draft) => {
       const { error: err } = await supabase.from("posts").insert({
@@ -113,13 +98,9 @@ export default function App() {
         sector: draft.sector.trim() || null,
         urgente: draft.urgente,
         contacto: draft.contacto.trim(),
-        remoto: Boolean(draft.remoto),
-        origen: draft.remoto ? (draft.origen || "").trim() || null : null,
       });
       if (err) throw err;
       setFormTipo(null);
-      // Después de publicar, la persona ve de inmediato que su pedido ya
-      // está vivo en la red — nada de quedarse pensando "¿sí se envió?".
       setToast(draft.tipo === "necesito" ? "¡Publicado! Ya saben que necesitas ayuda." : "¡Publicado! Ya lo pueden ver tus vecinos.");
       setFilters({ ...EMPTY_FILTERS, mine: true });
       setFeedTitle("Lo que has publicado");
@@ -129,8 +110,6 @@ export default function App() {
     [userId, reload]
   );
 
-  // Edita una publicación existente (solo campos de contenido; el dueño,
-  // el contacto fijo y el estado no cambian desde acá).
   const updatePost = useCallback(
     async (post, draft) => {
       const { error: err } = await supabase
@@ -145,8 +124,6 @@ export default function App() {
           municipio: draft.municipio.trim(),
           sector: draft.sector.trim() || null,
           urgente: draft.urgente,
-          remoto: Boolean(draft.remoto),
-          origen: draft.remoto ? (draft.origen || "").trim() || null : null,
         })
         .eq("id", post.id);
       if (err) throw err;
@@ -157,7 +134,6 @@ export default function App() {
     [reload]
   );
 
-  // Borra una publicación propia sin vuelta atrás
   const deletePost = async (post) => {
     setActionError("");
     const { error: err } = await supabase.from("posts").delete().eq("id", post.id);
@@ -166,10 +142,6 @@ export default function App() {
     setConfirming(null);
   };
 
-  // Las siguientes tres funciones llaman a las funciones (RPC) de la
-  // base de datos que hacen los chequeos de permisos del lado del servidor.
-  // Si el servidor rechaza la acción, se lo mostramos a la persona en vez
-  // de fallar en silencio.
   const markHelping = async (post) => {
     setActionError("");
     const { error: err } = await supabase.rpc("mark_helping", { p_id: post.id });
@@ -213,7 +185,6 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh" }}>
-      {/* Sin variables de entorno, no tiene sentido mostrar nada más */}
       {!supabaseConfigured && (
         <div style={{ maxWidth: 480, margin: "60px auto", padding: "0 20px", textAlign: "center" }}>
           <AlertTriangle size={32} color="var(--rojo)" style={{ marginBottom: 12 }} />
