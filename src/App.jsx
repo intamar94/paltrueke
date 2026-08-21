@@ -77,11 +77,7 @@ export default function App() {
 
   const DOS_DIAS_MS = 1000 * 60 * 60 * 48;
   const olvidadas = (posts || []).filter(
-    (p) =>
-      p.estado === "en_proceso" &&
-      (p.owner_id === userId || p.helper_id === userId) &&
-      p.updated_at &&
-      Date.now() - new Date(p.updated_at).getTime() > DOS_DIAS_MS
+    (p) => p.estado === "en_proceso" && (p.owner_id === userId || p.helper_id === userId) && p.updated_at && Date.now() - new Date(p.updated_at).getTime() > DOS_DIAS_MS
   );
 
   const createPost = useCallback(
@@ -99,7 +95,21 @@ export default function App() {
         urgente: draft.urgente,
         contacto: draft.contacto.trim(),
       });
-      if (err) throw err;
+      if (err) {
+        const motivo = err.message?.includes("3 pedidos")
+          ? "3 pedidos"
+          : err.message?.includes("6 publicaciones")
+            ? "6 publicaciones"
+            : null;
+        if (motivo) {
+          try {
+            await supabase.from("blocked_attempts").insert({ owner_id: userId, motivo });
+          } catch (_) {
+            // El registro de auditoría nunca debe ocultar el error original.
+          }
+        }
+        throw err;
+      }
       setFormTipo(null);
       setToast(draft.tipo === "necesito" ? "¡Publicado! Ya saben que necesitas ayuda." : "¡Publicado! Ya lo pueden ver tus vecinos.");
       setFilters({ ...EMPTY_FILTERS, mine: true });
@@ -112,20 +122,17 @@ export default function App() {
 
   const updatePost = useCallback(
     async (post, draft) => {
-      const { error: err } = await supabase
-        .from("posts")
-        .update({
-          tipo: draft.tipo,
-          categoria: draft.categoria,
-          titulo: catInfo(draft.categoria).label,
-          descripcion: draft.descripcion.trim() || null,
-          pais: "Colombia",
-          departamento: draft.departamento.trim() || "Colombia",
-          municipio: draft.municipio.trim(),
-          sector: draft.sector.trim() || null,
-          urgente: draft.urgente,
-        })
-        .eq("id", post.id);
+      const { error: err } = await supabase.from("posts").update({
+        tipo: draft.tipo,
+        categoria: draft.categoria,
+        titulo: catInfo(draft.categoria).label,
+        descripcion: draft.descripcion.trim() || null,
+        pais: "Colombia",
+        departamento: draft.departamento.trim() || "Colombia",
+        municipio: draft.municipio.trim(),
+        sector: draft.sector.trim() || null,
+        urgente: draft.urgente,
+      }).eq("id", post.id);
       if (err) throw err;
       setEditingPost(null);
       setToast("Cambios guardados.");
@@ -154,7 +161,16 @@ export default function App() {
     setActionError("");
     const { error: err } = await supabase.rpc("mark_resolved", { p_id: post.id });
     if (err) { setActionError(err.message); setConfirming(null); return; }
-    setToast("Publicación resuelta. Gracias por cerrar el círculo.");
+
+    let message = "Publicación resuelta. Gracias por cerrar el círculo.";
+    if (post.helper_id) {
+      const soyOwner = post.owner_id === userId;
+      const otraParteYaConfirmo = soyOwner ? post.confirmado_helper : post.confirmado_owner;
+      message = otraParteYaConfirmo
+        ? "Publicación resuelta. Gracias a los dos por confirmar."
+        : "Tu confirmación quedó registrada. Falta que la otra persona también confirme.";
+    }
+    setToast(message);
     await reload(true);
     setConfirming(null);
   };
@@ -170,16 +186,8 @@ export default function App() {
 
   const submitReport = async ({ motivo, detalle }) => {
     setActionError("");
-    const { error: err } = await supabase.from("reports").insert({
-      post_id: reporting.id,
-      reporter_id: userId,
-      motivo,
-      detalle: detalle.trim() || null,
-    });
-    if (err) {
-      setActionError(err.message);
-      return;
-    }
+    const { error: err } = await supabase.from("reports").insert({ post_id: reporting.id, reporter_id: userId, motivo, detalle: detalle.trim() || null });
+    if (err) { setActionError(err.message); return; }
     setReporting(null);
   };
 
@@ -189,86 +197,29 @@ export default function App() {
         <div style={{ maxWidth: 480, margin: "60px auto", padding: "0 20px", textAlign: "center" }}>
           <AlertTriangle size={32} color="var(--rojo)" style={{ marginBottom: 12 }} />
           <h2 className="disp" style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Falta configurar Supabase</h2>
-          <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5 }}>
-            No se encontraron <code>VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code>.
-            En Vercel: Settings → Environment Variables, agrégalas y vuelve a desplegar (Deployments → Redeploy).
-            En local: copia <code>.env.example</code> a <code>.env</code> y complétalo.
-          </p>
+          <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5 }}>No se encontraron <code>VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code>. En Vercel: Settings → Environment Variables, agrégalas y vuelve a desplegar (Deployments → Redeploy). En local: copia <code>.env.example</code> a <code>.env</code> y complétalo.</p>
         </div>
       )}
-
-      {authError && (
-        <div style={{ background: "#FDECE5", color: "var(--rojo)", padding: "10px 16px", fontSize: 13, textAlign: "center" }}>
-          {authError}
-        </div>
-      )}
-
-      {actionError && (
-        <div style={{ maxWidth: 720, margin: "12px auto 0", padding: "0 16px" }}>
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 8, background: "#FDECE5", border: "1px solid var(--rojo)", borderRadius: 10, padding: "10px 12px" }}>
-            <AlertTriangle size={16} color="var(--rojo)" style={{ flexShrink: 0, marginTop: 1 }} />
-            <span style={{ fontSize: 13, color: "var(--ink)", flex: 1 }}>{actionError}</span>
-            <button onClick={() => setActionError("")} style={{ border: "none", background: "none", color: "var(--rojo)", fontWeight: 700 }}>✕</button>
-          </div>
-        </div>
-      )}
-
-      {olvidadas.length > 0 && view === "home" && (
-        <div style={{ maxWidth: 720, margin: "12px auto 0", padding: "0 16px" }}>
-          <button
-            onClick={() => { setFilters({ ...EMPTY_FILTERS, mine: true }); setFeedTitle("¿Ya se resolvieron?"); setView("feed"); }}
-            style={{ width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 10, background: "#FFF6E8", border: "1px solid #E8590C", borderRadius: 10, padding: "10px 12px" }}
-          >
-            <AlertTriangle size={18} color="var(--naranja)" style={{ flexShrink: 0 }} />
-            <span style={{ fontSize: 13, color: "var(--ink)" }}>
-              Tienes {olvidadas.length} {olvidadas.length === 1 ? "publicación que lleva" : "publicaciones que llevan"} más de 2 días con ayuda en camino. ¿Ya se resolvió? Toca para revisar.
-            </span>
-          </button>
-        </div>
-      )}
-
+      {authError && <div style={{ background: "#FDECE5", color: "var(--rojo)", padding: "10px 16px", fontSize: 13, textAlign: "center" }}>{authError}</div>}
+      {actionError && <div style={{ maxWidth: 720, margin: "12px auto 0", padding: "0 16px" }}><div style={{ display: "flex", alignItems: "flex-start", gap: 8, background: "#FDECE5", border: "1px solid var(--rojo)", borderRadius: 10, padding: "10px 12px" }}><AlertTriangle size={16} color="var(--rojo)" style={{ flexShrink: 0, marginTop: 1 }} /><span style={{ fontSize: 13, color: "var(--ink)", flex: 1 }}>{actionError}</span><button onClick={() => setActionError("")} style={{ border: "none", background: "none", color: "var(--rojo)", fontWeight: 700 }}>✕</button></div></div>}
+      {olvidadas.length > 0 && view === "home" && <div style={{ maxWidth: 720, margin: "12px auto 0", padding: "0 16px" }}><button onClick={() => { setFilters({ ...EMPTY_FILTERS, mine: true }); setFeedTitle("¿Ya se resolvieron?"); setView("feed"); }} style={{ width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 10, background: "#FFF6E8", border: "1px solid #E8590C", borderRadius: 10, padding: "10px 12px" }}><AlertTriangle size={18} color="var(--naranja)" style={{ flexShrink: 0 }} /><span style={{ fontSize: 13, color: "var(--ink)" }}>Tienes {olvidadas.length} {olvidadas.length === 1 ? "publicación que lleva" : "publicaciones que llevan"} más de 2 días con ayuda en camino. ¿Ya se resolvió? Toca para revisar.</span></button></div>}
       {view === "home" && <HomeView counts={counts} onTipo={(t) => requirePhone(() => setFormTipo(t))} onVerTodo={() => goFeed("todo", "Todas las publicaciones")} />}
-
-      {view === "feed" && (
-        <FeedView
-          title={feedTitle}
-          posts={posts}
-          loading={loading}
-          error={error}
-          filters={filters}
-          setFilters={setFilters}
-          myId={userId}
-          onBack={() => setView("home")}
-          onRefresh={() => reload()}
-          onMarkHelping={(post) => requirePhone(() => setConfirming({ post, action: "helping" }))}
-          onResolve={(post) => setConfirming({ post, action: "resolve" })}
-          onReport={(post) => setReporting(post)}
-          onRelease={(post) => setConfirming({ post, action: "release" })}
-          onEdit={(post) => setEditingPost(post)}
-          onDelete={(post) => setConfirming({ post, action: "delete" })}
-        />
-      )}
-
-      <button onClick={() => requirePhone(() => setFormTipo("necesito"))} aria-label="Publicar" style={{ position: "fixed", bottom: 20, right: 20, width: 60, height: 60, borderRadius: 30, background: "var(--naranja)", border: "none", color: "#fff", boxShadow: "0 4px 14px rgba(232,89,12,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Plus size={28} />
-      </button>
-
-      {(formTipo || editingPost) && (
-        <PostForm
-          initialTipo={formTipo}
-          defaultContacto={telefono}
-          editingPost={editingPost}
-          onClose={() => { setFormTipo(null); setEditingPost(null); }}
-          onSubmit={editingPost ? (draft) => updatePost(editingPost, draft) : createPost}
-        />
-      )}
-
+      {view === "feed" && <FeedView title={feedTitle} posts={posts} loading={loading} error={error} filters={filters} setFilters={setFilters} myId={userId} onBack={() => setView("home")} onRefresh={() => reload()} onMarkHelping={(post) => requirePhone(() => setConfirming({ post, action: "helping" }))} onResolve={(post) => setConfirming({ post, action: "resolve" })} onReport={(post) => setReporting(post)} onRelease={(post) => setConfirming({ post, action: "release" })} onEdit={(post) => setEditingPost(post)} onDelete={(post) => setConfirming({ post, action: "delete" })} />}
+      <button onClick={() => requirePhone(() => setFormTipo("necesito"))} aria-label="Publicar" style={{ position: "fixed", bottom: 20, right: 20, width: 60, height: 60, borderRadius: 30, background: "var(--naranja)", border: "none", color: "#fff", boxShadow: "0 4px 14px rgba(232,89,12,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus size={28} /></button>
+      {(formTipo || editingPost) && <PostForm initialTipo={formTipo} defaultContacto={telefono} editingPost={editingPost} onClose={() => { setFormTipo(null); setEditingPost(null); }} onSubmit={editingPost ? (draft) => updatePost(editingPost, draft) : createPost} />}
       {phoneGateOpen && <PhoneGateModal userId={userId} onDone={handlePhoneDone} onClose={closePhoneGate} />}
-
       {confirming && (
         <ConfirmDialog
           title={confirming.action === "resolve" ? "¿Marcar como resuelto?" : confirming.action === "helping" ? "¿Vas a ayudar con esto?" : confirming.action === "delete" ? "¿Eliminar esta publicación?" : "¿Liberar este pedido?"}
-          description={confirming.action === "resolve" ? "Se va a quitar de la lista principal. Esta acción no se puede deshacer." : confirming.action === "helping" ? "Los demás van a ver que ya alguien está en camino. Cuando la ayuda llegue, marca \"Resuelto\" (tú o quien publicó, cualquiera de los dos puede hacerlo)." : confirming.action === "delete" ? "Se borra por completo, no se puede recuperar. Si solo pusiste un dato mal, mejor usa \"Editar\" en vez de esto." : "Va a volver a estar disponible para que otra persona ayude. Úsalo si te equivocaste, ya no puedes ayudar, o la otra parte no te contactó."}
+          description={confirming.action === "resolve" && confirming.post.helper_id
+            ? "Vas a confirmar que de tu parte ya se resolvió. Si la otra persona también confirma, se cierra automáticamente. Si no, queda pendiente su confirmación."
+            : confirming.action === "resolve"
+              ? "Se va a quitar de la lista principal. Esta acción no se puede deshacer."
+              : confirming.action === "helping"
+                ? "Los demás van a ver que ya alguien está en camino. Cuando la ayuda llegue, marca \"Resuelto\" (tú o quien publicó, cualquiera de los dos puede hacerlo)."
+                : confirming.action === "delete"
+                  ? "Se borra por completo, no se puede recuperar. Si solo pusiste un dato mal, mejor usa \"Editar\" en vez de esto."
+                  : "Va a volver a estar disponible para que otra persona ayude. Úsalo si te equivocaste, ya no puedes ayudar, o la otra parte no te contactó."}
           onCancel={() => setConfirming(null)}
           onConfirm={() => {
             if (confirming.action === "resolve") resolve(confirming.post);
@@ -278,7 +229,6 @@ export default function App() {
           }}
         />
       )}
-
       {reporting && <ReportDialog onCancel={() => setReporting(null)} onSubmit={submitReport} />}
       <Toast message={toast} />
     </div>
