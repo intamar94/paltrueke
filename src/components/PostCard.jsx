@@ -1,6 +1,6 @@
 import {
   AlertTriangle, MapPin, Clock, MessageCircle,
-  CheckCircle2, HandHeart, Flag, BadgeCheck, Star, XCircle, Pencil, Trash2, Globe2,
+  CheckCircle2, HandHeart, Flag, BadgeCheck, Star, XCircle, Pencil, Trash2,
 } from "lucide-react";
 import { catInfo } from "../data/categories";
 import { parseContacto } from "../lib/contact";
@@ -20,8 +20,6 @@ const TIPO_TINT = { necesito: "#FBEEE8", ofrezco: "#F0F6F1", informo: "#F0F1F3" 
 const TIPO_BORDER = { necesito: "#F0D9CE", ofrezco: "#C7DECB", informo: "#D6D8DB" };
 const TIPO_LABEL = { necesito: "Necesita", ofrezco: "Ofrece", informo: "Informa" };
 
-// Tarjeta de una publicación: cambia de botones y apariencia según el
-// tipo (necesito/ofrezco/informo) y según quién la está mirando.
 export default function PostCard({ post, mine, isHelper, onMarkHelping, onResolve, onReport, onRelease, onEdit, onDelete }) {
   const { emoji, label } = catInfo(post.categoria);
   const contacto = parseContacto(post.contacto);
@@ -72,11 +70,6 @@ export default function PostCard({ post, mine, isHelper, onMarkHelping, onResolv
           {post.verificado && (
             <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "var(--verde)" }}>
               <BadgeCheck size={13} /> VERIFICADO
-            </span>
-          )}
-          {post.remoto && (
-            <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "var(--info)" }}>
-              <Globe2 size={12} /> DESDE {post.origen || "OTRO LUGAR"}
             </span>
           )}
           {!resuelta && post.urgente && (
