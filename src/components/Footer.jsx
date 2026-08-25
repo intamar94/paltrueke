@@ -20,7 +20,7 @@ export default function Footer({ onNavigate }) {
       <div style={{ borderTop: "1px solid var(--border)", paddingTop: 20 }}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px 16px", marginBottom: 14 }}>
           {links.map(([label, path, Icon]) => (
-            <button key={`${label}-${path}`} onClick={() => go(path)} style={{ border: "none", background: "transparent", color: "var(--ink-soft)", fontSize: 12.5, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 5, padding: 4 }}>
+            <button key={`${label}-${path}`} onClick={() => go(path)} aria-label={label} style={{ border: "none", background: "transparent", color: "var(--ink-soft)", fontSize: 12.5, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 5, padding: 4 }}>
               <Icon size={13} strokeWidth={2} /> {label}
             </button>
           ))}
