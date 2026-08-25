@@ -1,20 +1,21 @@
-import { ArrowLeft, CheckCircle2, ShieldCheck, FileText, HeartHandshake, Mail, Cookie, UserRound, Scale, LockKeyhole } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ShieldCheck, FileText, HeartHandshake, Mail, Cookie } from "lucide-react";
 
 const content = {
   "/privacidad": {
     title: "Privacidad y datos personales",
     icon: ShieldCheck,
-    intro: "En Pa'l Trueke queremos que ayudar a los vecinos no implique entregar más información de la necesaria. Esta política explica, de forma clara, qué datos tratamos, para qué los usamos y cómo puedes ejercer tus derechos.",
+    intro: "En Pa'l Trueke queremos que ayudar a los vecinos no implique entregar más información de la necesaria. Esta política explica qué datos tratamos, para qué los usamos y cómo puedes ejercer tus derechos.",
     sections: [
-      ["Quién es el responsable", "Pa'l Trueke es una plataforma comunitaria independiente. Responsable del tratamiento: Intamar, responsable de Pa'l Trueke. Para consultas sobre privacidad y ejercicio de derechos: info@paltrueke.co. Si la plataforma pasa a ser operada por una persona jurídica, esta identificación será actualizada."],
+      ["Quién es el responsable", "El responsable del tratamiento de los datos personales es Ingrid Tatiana Mendoza Ariza, con domicilio en Alemania, responsable de la operación de Pa'l Trueke. Para consultas sobre privacidad y ejercicio de derechos: info@paltrueke.co."],
       ["Qué datos podemos tratar", "Podemos tratar datos de cuenta e identificación técnica, número de teléfono o WhatsApp, información que incluyas en tus publicaciones (por ejemplo, departamento, municipio, sector, descripción y contacto), reportes que presentes y datos técnicos necesarios para mantener la sesión y la seguridad del servicio. Las notificaciones push solo se habilitan si las solicitas expresamente."],
       ["Para qué los usamos", "Usamos estos datos para crear y mostrar publicaciones, permitir que las personas coordinen ayudas, mantener la cuenta y la sesión, prevenir abusos, gestionar reportes, resolver publicaciones, enviar notificaciones cuando las hayas activado y atender solicitudes de privacidad o soporte."],
       ["Qué información queda visible", "Una publicación puede mostrar la información que decidas incluir para que otra persona pueda coordinar contigo. En particular, si proporcionas un teléfono o WhatsApp como contacto, puede quedar disponible para las personas que necesiten comunicarse contigo en relación con esa publicación. No publiques contraseñas, códigos, datos bancarios ni información de terceros."],
       ["Base y autorización", "Cuando la ley exige autorización para el tratamiento, Pa'l Trueke solicitará una autorización previa, expresa e informada. Puedes retirar una autorización cuando proceda, sin afectar la legalidad del tratamiento realizado antes del retiro. Algunas operaciones estrictamente necesarias para prestar el servicio o cumplir obligaciones legales pueden tener una base distinta."],
       ["Tus derechos", "Puedes solicitar conocer, actualizar o rectificar tus datos; pedir información sobre su uso; presentar consultas o reclamos; y solicitar la supresión o revocatoria cuando legalmente proceda. Para ejercerlos, escribe a info@paltrueke.co indicando el correo asociado a tu cuenta y explicando la solicitud. La atención se realizará conforme a los términos legales aplicables."],
-      ["Con quién se tratan los datos", "Pa'l Trueke utiliza proveedores tecnológicos necesarios para operar el servicio, como alojamiento, base de datos, autenticación, correo y entrega de notificaciones. Estos proveedores solo deben recibir la información necesaria para prestar sus servicios. No vendemos datos personales."],
+      ["Con quién se tratan los datos", "Pa'l Trueke utiliza proveedores tecnológicos necesarios para operar el servicio, como alojamiento, base de datos, autenticación, correo y entrega de notificaciones. Estos proveedores deben recibir únicamente la información necesaria para prestar sus servicios. No vendemos datos personales."],
       ["Conservación y seguridad", "Conservamos la información mientras sea necesaria para las finalidades descritas, para mantener la cuenta, atender responsabilidades y cumplir obligaciones legales. Aplicamos controles técnicos y organizativos razonables, pero ningún servicio conectado a Internet puede garantizar seguridad absoluta."],
-      ["Menores de edad", "Pa'l Trueke está pensada para personas que puedan utilizar el servicio de forma responsable. No buscamos recopilar deliberadamente datos personales de niños, niñas o adolescentes. Si consideras que se ha tratado información de un menor de forma indebida, escríbenos inmediatamente a info@paltrueke.co."],
+      ["Transferencias internacionales", "La operación de Pa'l Trueke puede implicar el uso de proveedores tecnológicos cuyos servicios o infraestructura estén ubicados fuera de Colombia. Cuando corresponda, estas transferencias o transmisiones se gestionarán conforme a la normativa aplicable y con las garantías exigidas para la protección de los datos personales."],
+      ["Menores de edad", "Pa'l Trueke no busca recopilar deliberadamente datos personales de niños, niñas o adolescentes. Cuando resulte aplicable, cualquier tratamiento de datos de menores se realizará respetando su interés superior, sus derechos fundamentales y las condiciones exigidas por la normativa."],
       ["Cambios a esta política", "Podemos actualizar esta política cuando cambien el servicio, la tecnología o las obligaciones aplicables. Publicaremos la versión vigente en esta página e indicaremos la fecha de actualización."],
     ],
     note: "Marco de referencia: Ley 1581 de 2012 y normas colombianas que la reglamenten o modifiquen. Esta política es información general de la plataforma y no sustituye asesoría jurídica profesional.",
@@ -55,6 +56,7 @@ const content = {
     icon: Mail,
     intro: "Para consultas sobre Pa'l Trueke, privacidad, reportes o funcionamiento de la plataforma, puedes escribirnos.",
     sections: [
+      ["Responsable", "Ingrid Tatiana Mendoza Ariza — Alemania."],
       ["Correo general", "info@paltrueke.co"],
       ["Privacidad y datos personales", "Utiliza el mismo correo para consultas, solicitudes o reclamos relacionados con tus datos personales. Incluye suficiente información para identificar tu cuenta y entender la solicitud, pero no envíes documentos sensibles si no son necesarios."],
       ["Reportes de seguridad", "Para una publicación problemática, utiliza primero el botón Reportar dentro de la aplicación. Si existe un riesgo inmediato, utiliza además los canales oficiales de emergencia correspondientes."],
@@ -67,48 +69,20 @@ const content = {
 export default function LegalView({ path, onBack, onNavigate }) {
   const page = content[path] || content["/privacidad"];
   const Icon = page.icon;
-
-  const go = (next) => {
-    window.history.pushState({}, "", next);
-    onNavigate(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const go = (next) => { window.history.pushState({}, "", next); onNavigate(next); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
   return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "18px 18px 48px" }}>
-      <button onClick={onBack} style={{ border: "none", background: "transparent", color: "var(--ink-soft)", padding: "8px 0", display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700 }}>
-        <ArrowLeft size={17} /> Volver a Pa'l Trueke
-      </button>
-
+      <button onClick={onBack} style={{ border: "none", background: "transparent", color: "var(--ink-soft)", padding: "8px 0", display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700 }}><ArrowLeft size={17} /> Volver a Pa'l Trueke</button>
       <header style={{ background: "linear-gradient(135deg, #fff, #fff8ed)", border: "1px solid var(--border)", borderRadius: 22, padding: "22px 20px", marginTop: 10, boxShadow: "0 4px 14px rgba(74,51,40,0.05)" }}>
-        <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, var(--naranja), #d9a441)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-          <Icon size={22} />
-        </div>
+        <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, var(--naranja), #d9a441)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}><Icon size={22} /></div>
         <h1 className="disp" style={{ margin: 0, fontSize: 30, lineHeight: 1.05, color: "var(--ink)" }}>{page.title}</h1>
         <p style={{ margin: "10px 0 0", color: "var(--ink-soft)", fontSize: 13.5, lineHeight: 1.6 }}>{page.intro}</p>
       </header>
-
-      {page.sections.map(([heading, text]) => (
-        <section key={heading} style={{ marginTop: 18, background: "#fff", border: "1px solid var(--border)", borderRadius: 16, padding: "16px 17px" }}>
-          <h2 style={{ margin: 0, fontSize: 15, color: "var(--ink)", display: "flex", alignItems: "center", gap: 7 }}>
-            <CheckCircle2 size={15} color="var(--verde)" /> {heading}
-          </h2>
-          <p style={{ margin: "8px 0 0", color: "var(--ink-soft)", fontSize: 13, lineHeight: 1.65 }}>{text}</p>
-        </section>
-      ))}
-
-      {path === "/privacidad" && (
-        <section style={{ marginTop: 18, background: "#fffaf1", border: "1px solid var(--border)", borderRadius: 16, padding: "16px 17px" }}>
-          <h2 style={{ margin: 0, fontSize: 15, color: "var(--ink)", display: "flex", alignItems: "center", gap: 7 }}><Cookie size={15} color="var(--naranja)" /> Cookies y almacenamiento local</h2>
-          <p style={{ margin: "8px 0 0", color: "var(--ink-soft)", fontSize: 13, lineHeight: 1.65 }}>Pa'l Trueke utiliza almacenamiento técnico necesario para mantener la sesión y determinadas preferencias, además de tecnologías propias del funcionamiento de la aplicación. Actualmente no usamos cookies de publicidad ni herramientas de seguimiento de terceros con fines de perfilado. Si en el futuro incorporamos tecnologías no necesarias para prestar el servicio, informaremos y solicitaremos el consentimiento que corresponda antes de activarlas.</p>
-        </section>
-      )}
-
+      {page.sections.map(([heading, text]) => <section key={heading} style={{ marginTop: 18, background: "#fff", border: "1px solid var(--border)", borderRadius: 16, padding: "16px 17px" }}><h2 style={{ margin: 0, fontSize: 15, color: "var(--ink)", display: "flex", alignItems: "center", gap: 7 }}><CheckCircle2 size={15} color="var(--verde)" /> {heading}</h2><p style={{ margin: "8px 0 0", color: "var(--ink-soft)", fontSize: 13, lineHeight: 1.65 }}>{text}</p></section>)}
+      {path === "/privacidad" && <section style={{ marginTop: 18, background: "#fffaf1", border: "1px solid var(--border)", borderRadius: 16, padding: "16px 17px" }}><h2 style={{ margin: 0, fontSize: 15, color: "var(--ink)", display: "flex", alignItems: "center", gap: 7 }}><Cookie size={15} color="var(--naranja)" /> Cookies y almacenamiento local</h2><p style={{ margin: "8px 0 0", color: "var(--ink-soft)", fontSize: 13, lineHeight: 1.65 }}>Pa'l Trueke utiliza almacenamiento técnico necesario para mantener la sesión y determinadas preferencias, además de tecnologías propias del funcionamiento de la aplicación. Actualmente no usamos cookies de publicidad ni herramientas de seguimiento de terceros con fines de perfilado. Si en el futuro incorporamos tecnologías no necesarias para prestar el servicio, informaremos y solicitaremos el consentimiento que corresponda antes de activarlas.</p></section>}
       <div style={{ marginTop: 20, padding: "13px 15px", background: "#f7ecdc", borderRadius: 14, color: "var(--muted)", fontSize: 11.5, lineHeight: 1.55 }}>{page.note}</div>
-
-      <nav aria-label="Documentos legales" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginTop: 22 }}>
-        {Object.keys(content).map((p) => <button key={p} onClick={() => go(p)} style={{ border: "1px solid var(--border)", background: "#fff", color: "var(--ink-soft)", borderRadius: 999, padding: "7px 11px", fontSize: 11.5 }}>{content[p].title}</button>)}
-      </nav>
+      <nav aria-label="Documentos legales" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginTop: 22 }}>{Object.keys(content).map((p) => <button key={p} onClick={() => go(p)} style={{ border: "1px solid var(--border)", background: "#fff", color: "var(--ink-soft)", borderRadius: 999, padding: "7px 11px", fontSize: 11.5 }}>{content[p].title}</button>)}</nav>
     </main>
   );
 }
