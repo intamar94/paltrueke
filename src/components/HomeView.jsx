@@ -2,19 +2,17 @@ import { HandHeart, HeartHandshake, Megaphone, Radio } from "lucide-react";
 import EmergencyBanner from "./EmergencyBanner";
 import { HeroDoodle } from "./Doodles";
 
-// Pantalla de inicio: números de emergencia + accesos directos a
-// publicar (Necesito/Ofrezco/Informo) + resumen del estado de la red.
 export default function HomeView({ counts, onTipo, onVerTodo }) {
   return (
-    <div style={{ maxWidth: 720, margin: "0 auto", padding: "22px 18px 100px" }}>
+    <main style={{ maxWidth: 720, margin: "0 auto", padding: "22px 18px 100px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-        <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg, var(--naranja), #d9a441)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 3px 10px rgba(196,87,60,0.3)" }}>
+        <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg, var(--naranja), #d9a441)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 3px 10px rgba(196,87,60,0.3)" }} aria-hidden="true">
           <Radio size={22} color="#fff" strokeWidth={2.5} />
         </div>
         <h1 className="disp" style={{ fontSize: 30, fontWeight: 800, margin: 0, lineHeight: 1, color: "var(--ink)" }}>PA'L TRUEKE</h1>
       </div>
 
-      <div style={{ margin: "6px 0 10px" }}>
+      <div style={{ margin: "6px 0 10px" }} aria-hidden="true">
         <HeroDoodle />
       </div>
 
@@ -26,7 +24,7 @@ export default function HomeView({ counts, onTipo, onVerTodo }) {
         <EmergencyBanner />
       </div>
 
-      <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 10, marginBottom: 24 }} aria-label="Resumen de la red">
         {[
           { label: "Necesitan ayuda", value: counts.necesito, col: "var(--rojo)" },
           { label: "Ayuda disponible", value: counts.ofrezco, col: "var(--verde)" },
@@ -39,25 +37,27 @@ export default function HomeView({ counts, onTipo, onVerTodo }) {
         ))}
       </div>
 
-      <button onClick={() => onTipo("necesito")} style={bigBtn("linear-gradient(135deg, #d3654a, var(--rojo))", "rgba(196,87,60,0.3)")}>
-        <HandHeart size={24} />
-        <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>NECESITO</span>
-      </button>
+      <div aria-label="Acciones principales">
+        <button onClick={() => onTipo("necesito")} style={bigBtn("linear-gradient(135deg, #d3654a, var(--rojo))", "rgba(196,87,60,0.3")}>
+          <HandHeart size={24} />
+          <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>NECESITO</span>
+        </button>
 
-      <button onClick={() => onTipo("ofrezco")} style={{ ...bigBtn("linear-gradient(135deg, #5c8a62, var(--verde))", "rgba(76,122,82,0.28)"), marginTop: 12 }}>
-        <HeartHandshake size={24} />
-        <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>OFREZCO</span>
-      </button>
+        <button onClick={() => onTipo("ofrezco")} style={{ ...bigBtn("linear-gradient(135deg, #5c8a62, var(--verde))", "rgba(76,122,82,0.28)"), marginTop: 12 }}>
+          <HeartHandshake size={24} />
+          <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>OFREZCO</span>
+        </button>
 
-      <button onClick={() => onTipo("informo")} style={{ ...bigBtn("linear-gradient(135deg, #6c7684, var(--info))", "rgba(91,100,112,0.25)"), marginTop: 12 }}>
-        <Megaphone size={24} />
-        <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>INFORMO</span>
-      </button>
+        <button onClick={() => onTipo("informo")} style={{ ...bigBtn("linear-gradient(135deg, #6c7684, var(--info))", "rgba(91,100,112,0.25)"), marginTop: 12 }}>
+          <Megaphone size={24} />
+          <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>INFORMO</span>
+        </button>
+      </div>
 
       <button onClick={onVerTodo} style={{ width: "100%", marginTop: 18, padding: "13px 0", borderRadius: 18, border: "1.5px solid var(--border)", background: "#fff", color: "var(--ink)", fontWeight: 600, fontSize: 14 }}>
         Ver publicaciones
       </button>
-    </div>
+    </main>
   );
 }
 
