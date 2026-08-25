@@ -33,6 +33,47 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+    <script>
+      (() => {
+        const pages = {
+          "/privacidad": {
+            title: "Política de privacidad — Pa'l Trueke",
+            description: "Conoce cómo Pa'l Trueke trata y protege los datos personales utilizados para prestar el servicio."
+          },
+          "/terminos": {
+            title: "Términos de uso — Pa'l Trueke",
+            description: "Condiciones para utilizar Pa'l Trueke de forma responsable y segura."
+          },
+          "/seguridad": {
+            title: "Seguridad y normas de comunidad — Pa'l Trueke",
+            description: "Recomendaciones y normas de seguridad para utilizar Pa'l Trueke y participar en la comunidad."
+          },
+          "/contacto": {
+            title: "Aviso legal y contacto — Pa'l Trueke",
+            description: "Información de identificación, responsabilidad y contacto de Pa'l Trueke."
+          }
+        };
+        const page = pages[window.location.pathname];
+        if (!page) return;
+        const canonical = document.querySelector('link[rel="canonical"]');
+        const description = document.querySelector('meta[name="description"]');
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        const ogDescription = document.querySelector('meta[property="og:description"]');
+        const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+        const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+        const url = `https://paltrueke.co${window.location.pathname}`;
+        document.title = page.title;
+        canonical?.setAttribute("href", url);
+        description?.setAttribute("content", page.description);
+        ogUrl?.setAttribute("content", url);
+        ogTitle?.setAttribute("content", page.title);
+        ogDescription?.setAttribute("content", page.description);
+        twitterTitle?.setAttribute("content", page.title);
+        twitterDescription?.setAttribute("content", page.description);
+      })();
+    </script>
+
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
