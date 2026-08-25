@@ -1,4 +1,4 @@
-import { HandHeart, HeartHandshake, Megaphone, Radio, ShieldCheck, Users, MapPin } from "lucide-react";
+import { HandHeart, HeartHandshake, Megaphone, Radio, ShieldCheck, Users, MapPin, Share2, Download } from "lucide-react";
 import EmergencyBanner from "./EmergencyBanner";
 import { HeroDoodle } from "./Doodles";
 
@@ -9,6 +9,24 @@ const statConfig = [
 ];
 
 export default function HomeView({ counts, onTipo, onVerTodo, onVerTipo }) {
+  const shareSite = async () => {
+    const shareData = {
+      title: "Pa'l Trueke",
+      text: "Una red comunitaria para pedir, ofrecer y compartir ayuda en Colombia.",
+      url: "https://paltrueke.co",
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+      await navigator.clipboard?.writeText(shareData.url);
+    } catch (_) {
+      // El usuario puede cancelar el diálogo nativo de compartir sin que sea un error de la aplicación.
+    }
+  };
+
   return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "22px 18px 100px" }}>
       <header>
@@ -55,7 +73,7 @@ export default function HomeView({ counts, onTipo, onVerTodo, onVerTipo }) {
 
       <section aria-labelledby="main-actions-title">
         <h2 id="main-actions-title" className="sr-only">Acciones principales</h2>
-        <button onClick={() => onTipo("necesito")} style={bigBtn("linear-gradient(135deg, #d3654a, var(--rojo))", "rgba(196,87,60,0.3")}>
+        <button onClick={() => onTipo("necesito")} style={bigBtn("linear-gradient(135deg, #d3654a, var(--rojo))", "rgba(196,87,60,0.3)")}>
           <HandHeart size={24} />
           <span className="disp" style={{ fontSize: 20, fontWeight: 700 }}>NECESITO AYUDA</span>
         </button>
@@ -73,6 +91,34 @@ export default function HomeView({ counts, onTipo, onVerTodo, onVerTipo }) {
         <button onClick={onVerTodo} style={{ width: "100%", marginTop: 16, padding: "13px 0", borderRadius: 18, border: "1.5px solid var(--border)", background: "#fff", color: "var(--ink)", fontWeight: 600, fontSize: 14 }}>
           Explorar todas las publicaciones
         </button>
+      </section>
+
+      <section aria-labelledby="share-title" style={{ marginTop: 30, padding: "22px 18px", borderRadius: 22, background: "linear-gradient(145deg, #fffaf1, #fff)", border: "1px solid #e8d8bf", boxShadow: "0 4px 16px rgba(74,51,40,0.06)" }}>
+        <div style={{ textAlign: "center" }}>
+          <h2 id="share-title" className="disp" style={{ margin: "0 0 6px", fontSize: 24, color: "var(--ink)" }}>Compártelo con tus vecinos</h2>
+          <p style={{ margin: "0 auto 18px", maxWidth: 500, fontSize: 13, lineHeight: 1.5, color: "var(--ink-soft)" }}>
+            Escanea el código QR para abrir Pa'l Trueke. También puedes guardarlo o compartir el enlace para que más personas de tu comunidad conozcan la red.
+          </p>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+          <div style={{ width: 190, height: 190, padding: 12, background: "#fff", borderRadius: 18, border: "1px solid #eadfce", boxShadow: "0 5px 18px rgba(74,51,40,0.09)" }}>
+            <img src="/qr-paltrueke.svg" alt="Código QR para abrir paltrueke.co" width="166" height="166" style={{ display: "block", width: "100%", height: "100%" }} />
+          </div>
+        </div>
+
+        <p style={{ margin: "0 0 14px", textAlign: "center", fontSize: 12, color: "var(--muted)" }}>paltrueke.co</p>
+
+        <div style={{ display: "flex", gap: 9, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={shareSite} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, border: "none", borderRadius: 13, padding: "10px 14px", background: "var(--naranja)", color: "#fff", fontWeight: 700, fontSize: 13 }}>
+            <Share2 size={17} />
+            Compartir
+          </button>
+          <a href="/qr-paltrueke.svg" download="qr-paltrueke.svg" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, border: "1px solid var(--border)", borderRadius: 13, padding: "10px 14px", background: "#fff", color: "var(--ink)", fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+            <Download size={17} />
+            Guardar QR
+          </a>
+        </div>
       </section>
 
       <section aria-labelledby="how-title" style={{ marginTop: 30, padding: "20px 18px", borderRadius: 20, background: "rgba(255,255,255,0.72)", border: "1px solid var(--border)" }}>
