@@ -1,34 +1,88 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CO">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#e8590c" />
-    <meta name="description" content="Pa'l Trueke conecta a personas que necesitan ayuda con vecinos dispuestos a ayudar en Colombia." />
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
+    <meta name="description" content="Pa'l Trueke es una red comunitaria gratuita para pedir, ofrecer y compartir ayuda en Colombia: alimentos, agua, transporte, refugio, medicamentos, información y más." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Pa'l Trueke" />
+    <meta name="application-name" content="Pa'l Trueke" />
     <link rel="canonical" href="https://paltrueke.co/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />
     <meta property="og:site_name" content="Pa'l Trueke" />
-    <meta property="og:title" content="Pa'l Trueke — Red de ayuda comunitaria" />
-    <meta property="og:description" content="Pide ayuda, ofrece ayuda o comparte información útil con tu comunidad." />
+    <meta property="og:title" content="Pa'l Trueke — Red comunitaria de ayuda en Colombia" />
+    <meta property="og:description" content="Pide ayuda, ofrece ayuda o comparte información útil con tu comunidad en Colombia." />
     <meta property="og:url" content="https://paltrueke.co/" />
     <meta property="og:image" content="https://paltrueke.co/icon-192.png" />
+    <meta property="og:image:alt" content="Pa'l Trueke, red comunitaria de ayuda" />
+
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Pa'l Trueke — Red de ayuda comunitaria" />
+    <meta name="twitter:title" content="Pa'l Trueke — Red comunitaria de ayuda en Colombia" />
     <meta name="twitter:description" content="Una red comunitaria para pedir, ofrecer y compartir ayuda en Colombia." />
     <meta name="twitter:image" content="https://paltrueke.co/icon-192.png" />
+    <meta name="twitter:image:alt" content="Pa'l Trueke, red comunitaria de ayuda" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Pa'l Trueke — Red de ayuda comunitaria</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://paltrueke.co/#website",
+            "url": "https://paltrueke.co/",
+            "name": "Pa'l Trueke",
+            "description": "Red comunitaria gratuita para pedir, ofrecer y compartir ayuda en Colombia.",
+            "inLanguage": "es-CO"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://paltrueke.co/#organization",
+            "name": "Pa'l Trueke",
+            "url": "https://paltrueke.co/",
+            "logo": "https://paltrueke.co/icon-192.png",
+            "email": "info@paltrueke.co",
+            "areaServed": {
+              "@type": "Country",
+              "name": "Colombia"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://paltrueke.co/#webpage",
+            "url": "https://paltrueke.co/",
+            "name": "Pa'l Trueke — Red comunitaria de ayuda en Colombia",
+            "description": "Pide, ofrece y comparte ayuda comunitaria en Colombia.",
+            "isPartOf": { "@id": "https://paltrueke.co/#website" },
+            "about": { "@id": "https://paltrueke.co/#organization" },
+            "inLanguage": "es-CO"
+          }
+        ]
+      }
+    </script>
+
+    <title>Pa'l Trueke — Red comunitaria de ayuda en Colombia</title>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main style="max-width:720px;margin:40px auto;padding:0 20px;font-family:system-ui,sans-serif;line-height:1.6">
+        <h1>Pa'l Trueke — Red comunitaria de ayuda en Colombia</h1>
+        <p>Pa'l Trueke es una red comunitaria gratuita para pedir, ofrecer y compartir ayuda entre personas y vecinos en Colombia.</p>
+        <p>Puedes encontrar o compartir ayuda relacionada con alimentos, agua, transporte, refugio, medicamentos, información y otros recursos.</p>
+        <p>Activa JavaScript para utilizar todas las funciones de la plataforma.</p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
