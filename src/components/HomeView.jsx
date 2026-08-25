@@ -97,7 +97,7 @@ export default function HomeView({ counts, onTipo, onVerTodo, onVerTipo }) {
         <div style={{ textAlign: "center" }}>
           <h2 id="share-title" className="disp" style={{ margin: "0 0 6px", fontSize: 24, color: "var(--ink)" }}>Compártelo con tus vecinos</h2>
           <p style={{ margin: "0 auto 18px", maxWidth: 500, fontSize: 13, lineHeight: 1.5, color: "var(--ink-soft)" }}>
-            Escanea el código QR para abrir Pa'l Trueke. También puedes guardarlo o compartir el enlace para que más personas de tu comunidad conozcan la red.
+            Escanea el código QR de Pa'l Trueke para abrir la red. También puedes guardarlo o compartir el enlace para que más personas de tu comunidad conozcan la red.
           </p>
         </div>
 
