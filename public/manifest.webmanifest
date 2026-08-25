@@ -1,0 +1,19 @@
+{
+  "name": "Pa'l Trueke — Red de ayuda comunitaria",
+  "short_name": "Pa'l Trueke",
+  "description": "Red comunitaria para pedir, ofrecer y compartir ayuda en Colombia.",
+  "lang": "es-CO",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf4e9",
+  "theme_color": "#e8590c",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
