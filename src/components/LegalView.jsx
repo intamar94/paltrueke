@@ -9,16 +9,18 @@ const RESPONSIBLE = {
 };
 
 const pages = {
-  "/impressum": {
-    title: "Aviso legal",
+  "/contacto": {
+    title: "Aviso legal y contacto",
     icon: Scale,
-    intro: "Información de identificación y contacto de la responsable de Pa'l Trueke.",
+    intro: "Información de identificación, contacto y responsabilidad de Pa'l Trueke.",
     sections: [
       ["Responsable del servicio", `${RESPONSIBLE.name}.`],
       ["Domicilio", `${RESPONSIBLE.address}, ${RESPONSIBLE.city}, ${RESPONSIBLE.country}.`],
       ["Contacto", `Correo electrónico: ${RESPONSIBLE.email}.`],
       ["Actividad", "Pa'l Trueke es una plataforma digital orientada a facilitar la conexión entre personas para compartir necesidades, ofertas de ayuda e información comunitaria, principalmente en Colombia."],
       ["Responsabilidad sobre contenidos", "Las publicaciones son aportadas por las personas usuarias. Cada usuario responde por la legalidad, exactitud y derechos asociados al contenido que publica. Pa'l Trueke puede retirar contenido que infrinja la ley, estos términos o que represente un riesgo para la comunidad."],
+      ["Privacidad y datos personales", `Para consultas, solicitudes o reclamos relacionados con datos personales, escribe a ${RESPONSIBLE.email}. La política de privacidad explica las finalidades, categorías de datos, derechos y proveedores tecnológicos utilizados.`],
+      ["Reportes de seguridad", "Para una publicación problemática, utiliza primero el botón Reportar dentro de la aplicación. Si existe un riesgo inmediato, utiliza además los canales oficiales de emergencia correspondientes."],
       ["Resolución de conflictos", "Las cuestiones legales relacionadas con la plataforma se atenderán conforme a las normas imperativas que resulten aplicables. Cuando una norma permita elegir jurisdicción o legislación, se determinará de acuerdo con la situación concreta y la normativa aplicable."],
     ],
     note: "Última actualización: 26 de agosto de 2026. Este aviso legal es informativo y no sustituye asesoría jurídica individual.",
@@ -73,24 +75,10 @@ const pages = {
     ],
     note: "La seguridad física y la actuación ante emergencias siempre tienen prioridad sobre el uso de la plataforma.",
   },
-  "/contacto": {
-    title: "Contacto",
-    icon: Mail,
-    intro: "Para consultas sobre Pa'l Trueke, privacidad, reportes o funcionamiento de la plataforma, puedes escribirnos.",
-    sections: [
-      ["Responsable", `${RESPONSIBLE.name}.`],
-      ["Dirección", `${RESPONSIBLE.address}, ${RESPONSIBLE.city}, ${RESPONSIBLE.country}.`],
-      ["Correo general", RESPONSIBLE.email],
-      ["Privacidad y datos personales", `Utiliza ${RESPONSIBLE.email} para consultas, solicitudes o reclamos relacionados con tus datos personales. Incluye suficiente información para identificar tu cuenta y entender la solicitud, pero no envíes documentos sensibles si no son necesarios.`],
-      ["Reportes de seguridad", "Para una publicación problemática, utiliza primero el botón Reportar dentro de la aplicación. Si existe un riesgo inmediato, utiliza además los canales oficiales de emergencia correspondientes."],
-      ["Horario y respuesta", "El correo es un canal de contacto de la plataforma. Los tiempos de respuesta pueden variar y no debe utilizarse como canal de emergencias."],
-    ],
-    note: "Pa'l Trueke está orientada principalmente a Colombia. El correo oficial de contacto es info@paltrueke.co.",
-  },
 };
 
 const links = [
-  ["Aviso legal", "/impressum"],
+  ["Aviso legal", "/contacto"],
   ["Privacidad", "/privacidad"],
   ["Términos", "/terminos"],
   ["Seguridad", "/seguridad"],
@@ -147,7 +135,7 @@ export default function LegalView({ path, onBack, onNavigate }) {
 
       <nav aria-label="Documentos legales" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginTop: 22 }}>
         {links.map(([label, target]) => (
-          <button key={target} onClick={() => go(target)} style={{ border: "1px solid var(--border)", background: "#fff", color: "var(--ink-soft)", borderRadius: 999, padding: "7px 11px", fontSize: 11.5 }}>
+          <button key={`${label}-${target}`} onClick={() => go(target)} style={{ border: "1px solid var(--border)", background: "#fff", color: "var(--ink-soft)", borderRadius: 999, padding: "7px 11px", fontSize: 11.5 }}>
             {label}
           </button>
         ))}
